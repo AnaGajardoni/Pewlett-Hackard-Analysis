@@ -54,20 +54,11 @@ This query proved not to be good for our purpose. It is easily seen in the first
 ### Number of Retiring Employees by Titles - Version 2
 In a second attempt, the idea was to remove the duplicates. In order to obtain unique records, we modified the previous query adding *DISTINCT ON* matching with the *ORDER BY* clause as follows:
 
-select distinct on (r.emp_no)
-		r.emp_no, r.first_name, r.last_name, r.title
-into unique_titles	
-from retirement_titles r
-where r.to_date = '9999-01-01'
-order by r.emp_no, r.to_date desc;
+![unique_titles_query](/resources/unique_titles_query.png)
 
 In fact, the same result could be achieved if instead we had filtered the initial query by the to_date in the titles table as '9999-01-01' - meaning the ones whose to_date is '9999-01-01' are still active. It would have been simpler, but the result would be still the same: 
 
-select r.emp_no, r.emp_no, r.first_name, r.last_name, r.title
-into unique_titles	
-from retirement_titles r
-where r.to_date = '9999-01-01'
-order by r.emp_no, r.to_date desc;
+![unique_titles_query2](/resources/unique_titles_query2.png)
 
 The data returned by the above queries (first 15 records) is listed below - and shows the duplicates were eliminated.
 
@@ -105,6 +96,8 @@ The totals by each title category returned in unique_titles are the following:
 Lastly, PH wants to identify individuals who could serve as mentors to a new generation of senior professionals. In order to select the employees that qualify, they wanted us to make a query joining employees, titles, and department-employee tables filtering only the employees whose birthday fell in 1965. It is important to set the titles.to_date as '9999-01-01' so that we always get the most recent position of each employee.
 
 To get the possible mentor names, we made the query below:
+
+![mentorship_eligilbility](/resources/mentorship_eligilbility.png)
 
 select 	distinct on (e.emp_no)
 		e.emp_no, e.first_name, e.last_name, e.birth_date,
