@@ -25,7 +25,7 @@ Bobby has six CSV files (listed below), which should be converted to tables in a
 
 Based on the csv files, we created an ERD (picture below). Such ERD may not be 100% right especially in what refers to cardinality, but the data is good enough to extract the information we needed.
 
-![EmployeeDB](/resources/EmployeeDB.png)
+![EmployeeDB](resources/EmployeeDB.png)
 
 ## Results
 ### Number of Retiring Employees by Title
