@@ -138,4 +138,7 @@ And it produced the following results (a little more 1,500 records)
 | 14127  | Magdalena  | Cannard     | 1/10/1965  | 4/22/1994  | 1/1/9999 | Senior Engineer  |
 
 ## Summary
-
+In total, the retirement of baby boomers will affect a total of 72,458 professionals, which corresponds to 30% of the current total employees. The mentorship program selected barely 1,500, meaning each mentor would have coach almost 50 people. That is impossible! So as to prevent disruptions, we recommend:
+- Broaden the mentorship program from the ones born in 1965 to a four or five year window. Another possibility is to have the most experienced ones instead of basing on birth date;
+- Instead of making retirement programs, make programs to retain such professionals so that they could serve as mentors as well;
+- Go to the market as soon as possible and hire "readier" professionals!
