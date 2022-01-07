@@ -25,7 +25,7 @@ Bobby has six CSV files (listed below), which should be converted to tables in a
 
 Based on the csv files, we created an ERD (picture below). Such ERD may not be 100% right especially in what refers to cardinality, but the data is good enough to extract the information we needed.
 
-![relationships](resources/relationships.png)
+![EmployeeDB](resources/EmployeeDB.png)
 
 ## Results
 ### Number of Retiring Employees by Title
@@ -54,21 +54,20 @@ This query proved not to be good for our purpose. It is easily seen in the first
 ### Number of Retiring Employees by Titles - Version 2
 In a second attempt, the idea was to remove the duplicates. In order to obtain unique records, we modified the previous query adding *DISTINCT ON* matching with the *ORDER BY* clause as follows:
 
-SELECT DISTINCT ON (r.emp_no)
+select distinct on (r.emp_no)
 		r.emp_no, r.first_name, r.last_name, r.title
-INTO unique_titles	
-FROM retirement_titles r
-WHERE r.to_date = '9999-01-01'
-ORDER BY r.emp_no, r.to_date desc;
+into unique_titles	
+from retirement_titles r
+where r.to_date = '9999-01-01'
+order by r.emp_no, r.to_date desc;
 
 In fact, the same result could be achieved if instead we had filtered the initial query by the to_date in the titles table as '9999-01-01' - meaning the ones whose to_date is '9999-01-01' are still active. It would have been simpler, but the result would be still the same: 
 
-SELECT r.emp_no,
-		r.emp_no, r.first_name, r.last_name, r.title
-INTO unique_titles	
-FROM retirement_titles r
-WHERE r.to_date = '9999-01-01'
-ORDER BY r.emp_no, r.to_date desc;
+select r.emp_no, r.emp_no, r.first_name, r.last_name, r.title
+into unique_titles	
+from retirement_titles r
+where r.to_date = '9999-01-01'
+order by r.emp_no, r.to_date desc;
 
 The data returned by the above queries (first 15 records) is listed below - and shows the duplicates were eliminated.
 
@@ -90,7 +89,7 @@ The data returned by the above queries (first 15 records) is listed below - and 
 | 10051  | Hidefumi   | Caine      | Senior Engineer |
 | 10053  | Sanjiv     | Zschoche   | Senior Staff    |
 
-The totals returned in unique_titles are the following:
+The totals by each title category returned in unique_titles are the following:
 
 | Title                | total |
 |----------------------|-------|
@@ -103,7 +102,40 @@ The totals returned in unique_titles are the following:
 | "Technique Leader"   | 3603  |
 
 ### Finding employees eligible for the Mentorship Program
+Lastly, PH wants to identify individuals who could serve as mentors to a new generation of senior professionals. In order to select the employees that qualify, they wanted us to make a query joining employees, titles, and department-employee tables filtering only the employees whose birthday fell in 1965. It is important to set the titles.to_date as '9999-01-01' so that we always get the most recent position of each employee.
 
+To get the possible mentor names, we made the query below:
 
+select 	distinct on (e.emp_no)
+		e.emp_no, e.first_name, e.last_name, e.birth_date,
+		de.from_date, de.to_date,
+		t.title
+into mentorship_eligibility
+from employees e, dept_emp de, titles t
+where e.emp_no = de.emp_no
+and e.emp_no = t.emp_no
+and e.birth_date between '1965-01-01' and '1965-12-31'
+and t.to_date = '9999-01-01'
+order by e.emp_no;
+
+And it produced the following results (a little more 1,500 records)
+
+| emp_no | first_name | last_name   | birth_date | from_date  | to_date  | title            |
+|--------|------------|-------------|------------|------------|----------|------------------|
+| 10095  | Hilari     | Morton      | 1/3/1965   | 3/10/1994  | 1/1/9999 | Senior Staff     |
+| 10122  | Ohad       | Esposito    | 1/19/1965  | 8/6/1998   | 1/1/9999 | Technique Leader |
+| 10291  | Dipayan    | Seghrouchni | 1/23/1965  | 3/30/1987  | 1/1/9999 | Senior Staff     |
+| 10476  | Kokou      | Iisaka      | 1/1/1965   | 9/20/1987  | 1/1/9999 | Senior Staff     |
+| 10663  | Teunis     | Noriega     | 1/9/1965   | 2/12/1999  | 1/1/9999 | Technique Leader |
+| 10762  | Lech       | Himler      | 1/19/1965  | 1/21/1992  | 1/1/9999 | Senior Staff     |
+| 10933  | Juyoung    | Seghrouchni | 1/24/1965  | 8/2/1993   | 1/1/9999 | Senior Engineer  |
+| 12155  | Keiichiro  | Glinert     | 1/21/1965  | 9/16/1993  | 1/1/9999 | Senior Engineer  |
+| 12408  | Rasiah     | Sudkamp     | 1/10/1965  | 4/18/1995  | 1/1/9999 | Senior Engineer  |
+| 12643  | Morrie     | Schurmann   | 1/30/1965  | 12/31/1998 | 1/1/9999 | Staff            |
+| 13499  | Kazuhiko   | Sidou       | 1/16/1965  | 9/1/1991   | 1/1/9999 | Technique Leader |
+| 14075  | Denny      | Tchuente    | 1/3/1965   | 5/30/1991  | 1/1/9999 | Engineer         |
+| 14104  | Sudhanshu  | Demian      | 1/3/1965   | 7/23/1994  | 1/1/9999 | Senior Staff     |
+| 14127  | Magdalena  | Cannard     | 1/10/1965  | 4/22/1994  | 1/1/9999 | Senior Engineer  |
 
 ## Summary
+
